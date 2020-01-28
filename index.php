@@ -1,6 +1,6 @@
 <html>  
     <head>  
-        <title>PHP Ajax Crud using JQuery UI Dialog Box</title>  
+        <title>Crud приложение для редактирования файла JSON</title>  
 		<link rel="stylesheet" href="css/jquery-ui.css">
         <link rel="stylesheet" href="css/bootstrap.min.css" />
 		<script src="js/jquery.min.js"></script>  
@@ -65,7 +65,10 @@
 				</div>
 			</form>
 		</div>
-		
+		<div class="container">
+			<input type="checkbox" id="checkbox_edit" name="checkbox_edit">
+			<label>Включить режим правки</label>
+		</div>
 		<div id="action_alert" title="Информация">
 			
 		</div>
@@ -83,7 +86,8 @@
 <script>  
 $(document).ready(function(){  
 
-	load_data();    
+	load_data();   
+	
 	
 	function load_data()
 	{
@@ -96,6 +100,7 @@ $(document).ready(function(){
 			}
 		});
 	}
+		
 	
 	$("#user_dialog").dialog({
 		autoOpen:false,
