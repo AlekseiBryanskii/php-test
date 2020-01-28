@@ -64,11 +64,7 @@
 					<input type="submit" name="form_action" id="form_action" class="btn btn-info" value="Insert" />
 				</div>
 			</form>
-		</div>
-		<div class="container">
-			<input type="checkbox" id="checkbox_edit" name="checkbox_edit">
-			<label>Включить режим правки</label>
-		</div>
+		</div>		
 		<div id="action_alert" title="Информация">
 			
 		</div>
