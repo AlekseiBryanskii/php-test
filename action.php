@@ -4,21 +4,12 @@
 
 //include('database_connection.php');
 
-if(isset($_POST["action"]))
+if(isset($_POST["action"])) //проверяем запрос на NULL
 {
-	if($_POST["action"] == "insert")
-	{
-		/*
-		$query = "
-		INSERT INTO tbl_sample (first_name, last_name) VALUES ('".$_POST["first_name"]."', '".$_POST["last_name"]."')
-		";
-		$statement = $connect->prepare($query);
-		$statement->execute();
-		echo '<p>Data Inserted...</p>';
-		*/
-		//	$date_buildings[]= ['name_building' => 'Новый', 'adress' => '123', 'contacts' => ['tel_zastroishika'=>'95-32-47', 'email_zastroishika'=>'123@gmail.com'], 'data_sdachi' => '12/02/2015', 'about_buildings'=>'Инфа о здании' ];
-		$date_buildings=json_decode(file_get_contents('test.json'),true);
-				
+	if($_POST["action"] == "insert") //проверяем тип запроса (добавление)
+	{		
+		$date_buildings=json_decode(file_get_contents('test.json'),true); //получаем массив данных о зданиях из файла test.json
+		//добавляем новый элемент массива согласно пришедшим данным с формы 		
 		$date_buildings[]= 	array(
 									'name_building' => $_POST["name_building"],
 									'adress' => $_POST["adress"],
@@ -28,31 +19,16 @@ if(isset($_POST["action"]))
 									),
 									'data_sdachi' => $_POST["data_sdachi"],
 									'about_buildings' => $_POST["about_buildings"]									 
-							     );
-		$save = file_put_contents('test.json', json_encode($date_buildings, JSON_PRETTY_PRINT));
-		echo '<p>Данные добавлены</p><br>';
-		//echo '<p>Форма закроется автоматически через 2 секунды</p>';
+							     ); 
+		$save = file_put_contents('test.json', json_encode($date_buildings, JSON_PRETTY_PRINT)); // сохраняем новый массив в файле test.json
+		echo '<p>Данные добавлены</p><br>'; //вывод сообщения о записи данных в окно уведомления action_alert 		
 	}
-	if($_POST["action"] == "fetch_single")
-	{
-		/*
-		$query = "
-		SELECT * FROM tbl_sample WHERE id = '".$_POST["id"]."'
-		";
-		$statement = $connect->prepare($query);
-		$statement->execute();
-		$result = $statement->fetchAll();
-		foreach($result as $row)
+	if($_POST["action"] == "fetch_single") //проверяем тип запроса
+	{		
+		$date_buildings=json_decode(file_get_contents('test.json'),true);//получаем массив данных о зданиях из файла test.json
+		foreach($date_buildings as $key => $value) // обход по коллекции массива date_buildings
 		{
-			$output['first_name'] = $row['first_name'];
-			$output['last_name'] = $row['last_name'];
-		}
-		echo json_encode($output);
-		*/
-		$date_buildings=json_decode(file_get_contents('test.json'),true);
-		foreach($date_buildings as $key => $value)
-		{
-			if ($key == $_POST["id"])
+			if ($key == $_POST["id"]) //проверка нужного элемента массива для изменения
 			{
 				$output['name_building'] = $value['name_building'];
 				$output['adress'] = $value['adress'];
@@ -62,28 +38,17 @@ if(isset($_POST["action"]))
 				$output['about_buildings'] = $value['about_buildings'];
 			}
 		}
-		echo json_encode($output);
+		echo json_encode($output); //передаем данные о изменяемом элементе массива в форму для редактирования user_form
 	}
-	if($_POST["action"] == "update")
-	{
-		/*
-		$query = "
-		UPDATE tbl_sample 
-		SET first_name = '".$_POST["first_name"]."', 
-		last_name = '".$_POST["last_name"]."' 
-		WHERE id = '".$_POST["hidden_id"]."'
-		";
-		$statement = $connect->prepare($query);
-		$statement->execute();
-		*/
-		
-		
-		$date_buildings=json_decode(file_get_contents('test.json'),true);
-		foreach($date_buildings as $key => $value)
+	if($_POST["action"] == "update") //проверяем тип запроса
+	{		
+				
+		$date_buildings=json_decode(file_get_contents('test.json'),true); //получаем массив данных о зданиях из файла test.json
+		foreach($date_buildings as $key => $value) // обход по коллекции массива date_buildings
 		{
-			if ($key == $_POST["hidden_id"])
+			if ($key == $_POST["hidden_id"]) //проверка нужного элемента массива для изменения
 			{
-				$date_buildings[$key]['name_building'] = $_POST["name_building"];
+				$date_buildings[$key]['name_building'] = $_POST["name_building"]; // присваиваем ново значение
 				$date_buildings[$key]['adress'] = $_POST["adress"];
 				$date_buildings[$key]['contacts']['tel_zastroishika'] = $_POST["tel_zastroishika"];
 				$date_buildings[$key]['contacts']['email_zastroishika'] = $_POST["email_zastroishika"];				
@@ -91,27 +56,22 @@ if(isset($_POST["action"]))
 				$date_buildings[$key]['about_buildings'] = $_POST["about_buildings"];
 			}
 		}
-		$save = file_put_contents('test.json', json_encode($date_buildings, JSON_PRETTY_PRINT));			
+		$save = file_put_contents('test.json', json_encode($date_buildings, JSON_PRETTY_PRINT)); // сохраняем новый массив в файле test.json			
 		
-		echo '<p>Данные обновлены</p>';
+		echo '<p>Данные обновлены</p>'; //вывод сообщения о записи данных в окно уведомления action_alert 
 	}
-	if($_POST["action"] == "delete")
-	{
-		/*
-		$query = "DELETE FROM tbl_sample WHERE id = '".$_POST["id"]."'";
-		$statement = $connect->prepare($query);
-		$statement->execute();
-		*/
-		$date_buildings=json_decode(file_get_contents('test.json'),true);
-		foreach($date_buildings as $key => $value)
+	if($_POST["action"] == "delete") //проверяем тип запроса
+	{		
+		$date_buildings=json_decode(file_get_contents('test.json'),true); //получаем массив данных о зданиях из файла test.json
+		foreach($date_buildings as $key => $value) // обход по коллекции массива date_buildings
 		{
-			if ($key == $_POST["id"])
+			if ($key == $_POST["id"]) //проверка нужного элемента массива для изменения
 			{
-				array_splice($date_buildings, $key, 1);
+				array_splice($date_buildings, $key, 1); // удаляем 1 элемент массива по ключу
 			}
 		}
-		$save = file_put_contents('test.json', json_encode($date_buildings, JSON_PRETTY_PRINT));
-		echo '<p>Данные удалены</p>';
+		$save = file_put_contents('test.json', json_encode($date_buildings, JSON_PRETTY_PRINT)); // сохраняем новый массив в файле test.json	
+		echo '<p>Данные удалены</p>';  //вывод сообщения о записи данных в окно уведомления action_alert 
 	}
 }
 

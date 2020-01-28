@@ -5,10 +5,7 @@
         <link rel="stylesheet" href="css/bootstrap.min.css" />
 		<script src="js/jquery.min.js"></script>  
 		<script src="js/jquery-ui.js"></script>
-		
-		
-		
-		
+				
     </head>  
     <body>  
         <div class="container">
@@ -17,15 +14,17 @@
 			<h3 align="center">Crud приложение для редактирования файла JSON</a></h3><br />
 			<br />
 			<div align="right" style="margin-bottom:5px;">
+			<!-- -->
+			<!-- Создаем кнопку Добавить запись использую стиль bootstrap -->
 			<button style="width:100%; height:35px" type="button" name="add" id="add" class="btn btn-success btn-xs">Добавить запись</button>
 			</div>
-			
+			<!-- Контейнер для хранения таблицы о зданиях -->
 			<div class="table-responsive"  id="user_data">
 				
 			</div>
 			<br />
 		</div>
-		
+		<!-- Форма для добавления и редактирования записей -->
 		<div id="user_dialog" title="Введите данные">
 			<form method="post" id="user_form">
 				<div class="form-group">
@@ -65,10 +64,12 @@
 				</div>
 			</form>
 		</div>		
+		
+		<!-- Контейнер для вывода информирующего окна -->
 		<div id="action_alert" title="Информация">
 			
 		</div>
-		
+		<!-- Контейнер для вывода окна с подтверждением на удаление записи -->
 		<div id="delete_confirmation" title="Подтвердите действие">
 		<p>Удалить запись?</p>
 		</div>
@@ -82,7 +83,7 @@
 <script>  
 $(document).ready(function(){  
 
-	load_data();   
+	load_data();  // вызов функции заполнения данных
 	
 	
 	function load_data()
@@ -95,45 +96,45 @@ $(document).ready(function(){
 				$('#user_data').html(data);
 			}
 		});
-	}
+	} // функция загрузки данных с json файла
 		
 	
 	$("#user_dialog").dialog({
 		autoOpen:false,
 		width:500
-	});
+	}); // настраиваем размер окна для ввода данных и отключаем свойство автоматического открытия при загрузке страницы
 	
-	$('#add').click(function(){
-		$('#user_dialog').attr('title', 'Введите данные');
-		$('#action').val('insert');
-		$('#form_action').val('Добавить запись');
-		$('#user_form')[0].reset();
-		$('#form_action').attr('disabled', false);
-		$("#user_dialog").dialog('open');
+	$('#add').click(function(){ //событие нажатия на кнопку Добавить запись
+		$('#user_dialog').attr('title', 'Введите данные'); // передаем значение tittle элементу div для отображения текущего действия
+		$('#action').val('insert'); // передаем название операции  
+		$('#form_action').val('Добавить запись'); // изменяем значение кнопки в соотвествии с действием
+		$('#user_form')[0].reset(); // очищаем значения элементов
+		$('#form_action').attr('disabled', false); // делаем кнопку не активной (для того чтобы юзер не записал дважды )
+		$("#user_dialog").dialog('open'); //открываем форму
 	});
 	
 	$('#user_form').on('submit', function(event){
 		event.preventDefault();
-		var error_name_building = '';
+		var error_name_building = ''; // обьявляем значения переменных об ошибках на форме
 		var error_adress = '';
 		var error_tel_zastroishika = '';
 		var error_email_zastroishika = '';
 		var error_data_sdachi = '';
 		var error_about_buildings = '';
-		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/; //реглярное выражение для прорки корректности email
 		
 		
-		if($('#name_building').val() == '')
+		if($('#name_building').val() == '') //проверка на заполненость поля Здание
 		{
-			error_name_building = 'Введите название здания';
-			$('#error_name_building').text(error_name_building);
-			$('#name_building').css('border-color', '#cc0000');
+			error_name_building = 'Введите название здания'; 
+			$('#error_name_building').text(error_name_building); //выводим сообщение в элемент span об ошибке
+			$('#name_building').css('border-color', '#cc0000'); // делаем границу поля красным для указания поля в котором совершена ошибка
 		}
 		else
 		{
-			error_name_building = '';
-			$('#error_name_building').text(error_name_building);
-			$('#name_building').css('border-color', '');
+			error_name_building = ''; 
+			$('#error_name_building').text(error_name_building); // удаляем значение в span
+			$('#name_building').css('border-color', ''); // возвращаем в исходное состояние 
 		}
 		if($('#adress').val() == '')
 		{
@@ -198,25 +199,25 @@ $(document).ready(function(){
 			$('#about_buildings').css('border-color', '');
 		}
 		
-		if(error_name_building != '' || error_adress != '' || error_tel_zastroishika != '' || error_data_sdachi != '' || error_about_buildings != '' || error_email_zastroishika != '')
+		if(error_name_building != '' || error_adress != '' || error_tel_zastroishika != '' || error_data_sdachi != '' || error_about_buildings != '' || error_email_zastroishika != '') // если какой-то из элементов с ошибками то ничего не делаем
 		{
 			return false;
 		}
 		else
-		{
-			$('#form_action').attr('disabled', 'disabled');
-			var form_data = $(this).serialize();
+		{  // если поьзователь заполнил правильно то 
+			$('#form_action').attr('disabled', 'disabled'); // блокируем кнопку
+			var form_data = $(this).serialize(); // собираем данные с формы
 			$.ajax({
-				url:"action.php",
-				method:"POST",
-				data:form_data,
-				success:function(data)
+				url:"action.php", // направляем данные запроса на исполнение
+				method:"POST", // метод запроса 
+				data:form_data, // тут данные с формы
+				success:function(data) // функция выполняется в случае успешной передачи
 				{
-					$('#user_dialog').dialog('close');
-					$('#action_alert').html(data);
-					$('#action_alert').dialog('open');
-					load_data();
-					$('#form_action').attr('disabled', false);
+					$('#user_dialog').dialog('close'); // закрываем форму
+					$('#action_alert').html(data); // выводим статус действия в информирующее окно
+					$('#action_alert').dialog('open'); // открываем информирующее окно
+					load_data(); // вызов функции для оьновления данных на странице
+					$('#form_action').attr('disabled', false); // делаем кнопку на форму активной
 				}
 			});
 		}
@@ -225,18 +226,17 @@ $(document).ready(function(){
 	
 	$('#action_alert').dialog({
 		autoOpen:false
-	});
+	}); // информирующее окно
 		
-	$(document).on('click', '.edit', function(){		
-		var id = $(this).attr('id');
-		var action = 'fetch_single';
-		//$('#action_alert').dialog('open');
+	$(document).on('click', '.edit', function(){		// событие нажатия на кнопку редактировать
+		var id = $(this).attr('id'); // узнаем id button - он соответствует индексу элемента в массиве
+		var action = 'fetch_single';	// тип действия	
 		
 		$.ajax({
 			url:"action.php",
 			method:"POST",
 			data:{id:id, action:action},
-			dataType:"json",
+			dataType:"json",  // запрашиваем данные из массива с id согласно кнопке
 			success:function(data)
 			{
 				$('#name_building').val(data.name_building);
@@ -244,47 +244,47 @@ $(document).ready(function(){
 				$('#tel_zastroishika').val(data.tel_zastroishika);
 				$('#email_zastroishika').val(data.email_zastroishika);			
 				$('#data_sdachi').val(data.data_sdachi);
-				$('#about_buildings').val(data.about_buildings);
+				$('#about_buildings').val(data.about_buildings);   // присваиваем полученные значения элементам формы
 								
-				$('#user_dialog').attr('title', 'Введите данные');
-				$('#action').val('update');
-				$('#hidden_id').val(id);
-				$('#form_action').val('Обновить запись');
-				$('#user_dialog').dialog('open');
+				$('#user_dialog').attr('title', 'Введите данные'); 
+				$('#action').val('update'); // выбор типа операции
+				$('#hidden_id').val(id); 
+				$('#form_action').val('Обновить запись'); // изменяем название кнопки
+				$('#user_dialog').dialog('open'); // открываем форму редактирования, принцип работы как с добавлением записи но работает метод update на action.php
 				
 			}
 		});
 	});
 	
-	$('#delete_confirmation').dialog({
+	$('#delete_confirmation').dialog({ // вызов всплывающего окна с 2 кнопками
 		autoOpen:false,
 		modal: true,
 		buttons:{
-			Ok : function(){
-				var id = $(this).data('id');
+			Ok : function(){ 
+				var id = $(this).data('id'); // получаем значение id от кнопки
 				var action = 'delete';
 				$.ajax({
 					url:"action.php",
 					method:"POST",
-					data:{id:id, action:action},
+					data:{id:id, action:action}, // устанавливаем id и операцию над записью
 					success:function(data)
 					{
-						$('#delete_confirmation').dialog('close');
-						$('#action_alert').html(data);
-						$('#action_alert').dialog('open');
-						load_data();
+						$('#delete_confirmation').dialog('close'); // закрываем информирующую форму
+						$('#action_alert').html(data); // вывод сообщения
+						$('#action_alert').dialog('open'); // показываем окно с информацией
+						load_data(); // отображаем отредактированную таблицу
 					}
 				});
 			},
-			Cancel : function(){
+			Cancel : function(){ // закрываем всплывающее окно если нажали cansel
 				$(this).dialog('close');
 			}
 		}	
 	});
 	
-	$(document).on('click', '.delete', function(){
-		var id = $(this).attr("id");
-		$('#delete_confirmation').data('id', id).dialog('open');
+	$(document).on('click', '.delete', function(){ // событие нажатия кнопки
+		var id = $(this).attr("id");  // получаем значение id от кнопки
+		$('#delete_confirmation').data('id', id).dialog('open'); //передаем id нажатой кнопки и открываем диалоговое окно
 	});
 	
 });    

@@ -18,14 +18,15 @@ echo '
 		
 	  </tr>
 	</thead>
-	<tbody>';		
+	<tbody>';		// подгатавливаем заголовки таблицы
 		 //<th>Данные о здании</th>
-	//$getfile = file_get_contents('test.json');
-	$date_buildings = json_decode(file_get_contents('test.json'),true);			
+	
+	$date_buildings = json_decode(file_get_contents('test.json'),true);	// получаем массив данных из файла 	test.json	
 	if ( !empty($date_buildings))
 	{
 		foreach($date_buildings as $index => $building)
 		{				
+			// помещаем таблицу в контейнер div c ID = user_data и создаем кнопки для редактирования и удаления с присвоением свойства id для кнопок
 			echo '<tr>' .		
 					'<td rowspan="2">' . $index = $index + 1  . '</td>' .
 					'<td colspan="1">' . $building['name_building'] . '</td>' .			
@@ -37,7 +38,7 @@ echo '
 				'</tr>'.
 				'<tr>' .
 					'<td colspan="6">' . $building['about_buildings'] . '</td>' .
-				'</tr>';
+				'</tr>';				
 		}		
 	}		
 									
@@ -45,7 +46,7 @@ echo '
 	</tbody>
 </table>		
 ';
-
+//закрываем теги table
 
 
 ?>
